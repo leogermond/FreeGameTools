@@ -27,11 +27,7 @@ from pygame import Color
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
     Copyright 2012, Léo Germond
-    
-    
 """
-
-
 
 # La version du logicel
 __version__ = "0.1"

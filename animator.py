@@ -95,7 +95,7 @@ class Animator:
         """ Lit le dossier et recharge les images qui ont changé """
         from glob import glob # On importe la fonction 'glob' depuis le module 'glob'
         self.images = [] # On vide les images
-        for filename in glob("{0}/*.png".format(self.images_path)):
+        for filename in glob("{0}/*.[pP][nN][gG]".format(self.images_path)):
             # Pour chaque image trouvée dans le dossier 
             try: # Utilisé pour gérer les erreurs (appellées "exceptions")
                 image = pygame.image.load(filename).convert() # On la charge depuis le disque

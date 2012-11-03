@@ -116,6 +116,10 @@ class Scene:
         cur_img = imgs.index(ob[0])
         ob[0] = imgs[(cur_img - 1)%len(imgs)]
     
+    def addNewObject(self, pos):
+        self.objects.append([next(self.listAllImages()), pos])
+        return len(self.objects) - 1                
+        
     def saveToFile(self):
         import json
         f = open(self.scene_file, "w")
@@ -200,6 +204,9 @@ class SceneCreator:
                 elif event.key == K_s:
                     if pygame.key.get_mods() & pygame.KMOD_CTRL:
                         self.scene.saveToFile()
+                elif event.key == K_SPACE:
+                    self.selected_sprite = self.scene.addNewObject(pygame.mouse.get_pos())
+                    self.delta_selected = [0, 0]
                 elif event.key == K_PAGEDOWN:
                     if self.scene.scale > 1:
                         self.scene.scale -= 1

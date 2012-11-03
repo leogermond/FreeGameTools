@@ -200,6 +200,11 @@ class SceneCreator:
                 elif event.key == K_s:
                     if pygame.key.get_mods() & pygame.KMOD_CTRL:
                         self.scene.saveToFile()
+                elif event.key == K_PAGEDOWN:
+                    if self.scene.scale > 1:
+                        self.scene.scale -= 1
+                elif event.key == K_PAGEUP:
+                    self.scene.scale += 1
                 elif event.key == K_RIGHT:
                     pos = pygame.mouse.get_pos()
                     move = self.scene.scale

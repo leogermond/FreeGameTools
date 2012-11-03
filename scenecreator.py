@@ -12,6 +12,10 @@ __version__ = "0.1"
     Le programme se base sur le format JSON pour charger et sauver l'ensemble
     des scènes.
     
+    Utilisation: python SceneCreator.py sprites_dir scene_file
+    Ou sprite_dir est un dossier contenant les sprites et
+    scene_file est un fichier contenant la scene à créer ou éditer.
+    
     SceneCreator is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or

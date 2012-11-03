@@ -119,7 +119,9 @@ class Scene:
     def saveToFile(self):
         import json
         f = open(self.scene_file, "w")
-        json.dump(self.scene, f) 
+        # Indent = 0 => "pretty" print (newlines)
+        json.dump(self.scene, f, indent=0)
+        print("Scene saved to {0}".format(self.scene_file)) 
     
     def __getattr__(self, name):
         if name in Scene.file_data.keys():

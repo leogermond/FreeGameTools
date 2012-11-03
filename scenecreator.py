@@ -62,9 +62,10 @@ class Scene:
     
     def objectAt(self, pos):
         from pygame import Rect
-        for (n, (s, p)) in enumerate(self.objects):
+        for (rn, (s, p)) in enumerate(self.objects[::-1]):
             img = self.getImage(s)
             if Rect(p, img.get_size()).collidepoint(pos):
+                n = len(self.objects) - 1 - rn
                 print("Found sprite {0}: {1}".format(n, self.objects[n][0]))
                 return n
         return None
@@ -112,8 +113,8 @@ class Scene:
         
 class SceneCreator:
     def __init__(self, scene):
-        """ 
-            scene: liste [(sprite, position)] triée par Z
+        """
+            Lance l'application SceneCreator sur la scène donnée
         """
         self.scene = scene
         self.screen = pygame.display.set_mode(scene.resolution)

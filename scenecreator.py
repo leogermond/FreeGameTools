@@ -60,6 +60,11 @@ class Scene:
             image = pygame.transform.scale(image, (self.scale * image.get_width(), self.scale * image.get_height()))
         return image
     
+    def listAllImages(self):
+        import os
+        import glob
+        return map(os.path.basename, glob.glob(os.path.join(self.sprites_dir, "*.[pP][nN][gG]")))
+        
     def objectAt(self, pos):
         from pygame import Rect
         for (rn, (s, p)) in enumerate(self.objects[::-1]):
@@ -97,7 +102,19 @@ class Scene:
         del self.objects[n]
         self.objects.append(ob)
         return len(self.objects) - 1
+    
+    def changeToNextImage(self, n):
+        ob = self.objects[n]
+        imgs = list(self.listAllImages())
+        cur_img = imgs.index(ob[0])
+        ob[0] = imgs[(cur_img + 1)%len(imgs)]        
         
+    def changeToPreviousImage(self, n):
+        ob = self.objects[n]
+        imgs = list(self.listAllImages())
+        cur_img = imgs.index(ob[0])
+        ob[0] = imgs[(cur_img - 1)%len(imgs)] 
+    
     def __getattr__(self, name):
         if name in Scene.file_data.keys():
             default = Scene.file_data[name]
@@ -164,6 +181,12 @@ class SceneCreator:
                 elif event.key == K_b:
                     if not self.selected_sprite is None:
                         self.selected_sprite = self.scene.putToBackground(self.selected_sprite)
+                elif event.key == K_p:
+                    if not self.selected_sprite is None:
+                        self.scene.changeToNextImage(self.selected_sprite)
+                elif event.key == K_o:
+                    if not self.selected_sprite is None:
+                        self.scene.changeToPreviousImage(self.selected_sprite)
                 elif event.key == K_RIGHT:
                     pos = pygame.mouse.get_pos()
                     move = self.scene.scale

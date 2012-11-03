@@ -47,7 +47,7 @@ class Scene:
         if scene_file == None:
             self.scene = {}
         else:
-            self.scene_file = scene_file
+            self.scene_file = scene_file              
             try:
                 with open(self.scene_file, "r") as f:
                     self.scene = json.load(f)
@@ -186,14 +186,7 @@ class SceneCreator:
                 pygame.display.set_mode(event.size, pygame.RESIZABLE)
             elif event.type == MOUSEBUTTONUP:
                 if event.button == 1:
-                    if not self.selected_sprite is None:
-                        print("Sprite {0} deselected".format(self.selected_sprite))
-                        self.selected_sprite = None
-                    else:
-                        self.selected_sprite = self.scene.objectAt(event.pos)
-                        if not self.selected_sprite is None:                 
-                            self.delta_selected = self.scene.distToObject(self.selected_sprite, event.pos)
-                            print("Sprite {0} selected".format(self.selected_sprite))
+                    self.selectSprite(event.pos)
                 elif event.button == 3:
                     if not self.selected_sprite is None:
                         self.scene.deleteObject(self.selected_sprite)
@@ -217,6 +210,8 @@ class SceneCreator:
                 elif event.key == K_s:
                     if pygame.key.get_mods() & pygame.KMOD_CTRL:
                         self.scene.saveToFile()
+                elif event.key == K_RETURN:
+                    self.selectSprite(pygame.mouse.get_pos())
                 elif event.key == K_SPACE:
                     self.selected_sprite = self.scene.addNewObject(pygame.mouse.get_pos())
                     self.delta_selected = [0, 0]
@@ -249,11 +244,25 @@ class SceneCreator:
                     if pygame.key.get_mods() & pygame.KMOD_SHIFT:
                          move *= 10
                     pygame.mouse.set_pos((pos[0], pos[1] + move))
+                elif event.key == K_F4:
+                    if pygame.key.get_mods() & KMOD_ALT:
+                        self.quit = True
+                        break
         
         if not self.selected_sprite is None:
             new_pos_x = pygame.mouse.get_pos()[0] - self.delta_selected[0]
             new_pos_y = pygame.mouse.get_pos()[1] - self.delta_selected[1]
             self.scene.moveObject(self.selected_sprite, (new_pos_x, new_pos_y))
+            
+    def selectSprite(self, pos):
+        if not self.selected_sprite is None:
+            print("Sprite {0} deselected".format(self.selected_sprite))
+            self.selected_sprite = None
+        else:
+            self.selected_sprite = self.scene.objectAt(pos)
+            if not self.selected_sprite is None:                 
+                self.delta_selected = self.scene.distToObject(self.selected_sprite, pos)
+                print("Sprite {0} selected".format(self.selected_sprite))
                     
 if __name__ == "__main__":
     import sys

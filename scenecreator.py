@@ -142,9 +142,8 @@ class SceneCreator:
             Lance l'application SceneCreator sur la scène donnée
         """
         self.scene = scene
-        self.screen = pygame.display.set_mode(scene.resolution)
+        self.screen = pygame.display.set_mode(scene.resolution, pygame.RESIZABLE)
         self.clock_fps = pygame.time.Clock()
-        self.screen = pygame.display.set_mode(scene.resolution)
         
         self.selected_sprite = None
         self.delta_selected = [0, 0]
@@ -165,6 +164,9 @@ class SceneCreator:
         for event in pygame.event.get():
             if event.type == QUIT:
                 self.quit = True
+            elif event.type == VIDEORESIZE:
+                self.scene.resolution = event.size
+                pygame.display.set_mode(event.size, pygame.RESIZABLE)
             elif event.type == MOUSEBUTTONUP:
                 if event.button == 1:
                     if not self.selected_sprite is None:

@@ -186,11 +186,9 @@ class SceneCreator:
                 pygame.display.set_mode(event.size, pygame.RESIZABLE)
             elif event.type == MOUSEBUTTONUP:
                 if event.button == 1:
-                    self.selectSprite(event.pos)
+                    self.selectAtPosition(event.pos)
                 elif event.button == 3:
-                    if not self.selected_sprite is None:
-                        self.scene.deleteObject(self.selected_sprite)
-                        self.selected_sprite = None
+                    self.deleteAtPosition(event.pos)
             elif event.type == KEYDOWN:
                 if event.key == K_c:
                     if not self.selected_sprite is None:
@@ -211,7 +209,9 @@ class SceneCreator:
                     if pygame.key.get_mods() & pygame.KMOD_CTRL:
                         self.scene.saveToFile()
                 elif event.key == K_RETURN:
-                    self.selectSprite(pygame.mouse.get_pos())
+                    self.selectAtPosition(pygame.mouse.get_pos())
+                elif event.key == K_DELETE:
+                    self.deleteAtPosition(pygame.mouse.get_pos())
                 elif event.key == K_SPACE:
                     self.selected_sprite = self.scene.addNewObject(pygame.mouse.get_pos())
                     self.delta_selected = [0, 0]
@@ -254,7 +254,12 @@ class SceneCreator:
             new_pos_y = pygame.mouse.get_pos()[1] - self.delta_selected[1]
             self.scene.moveObject(self.selected_sprite, (new_pos_x, new_pos_y))
             
-    def selectSprite(self, pos):
+    def selectAtPosition(self, pos):
+        """ 
+            Selects or deselects the sprite at the given position 
+            If the sprite was selected, it is deselected
+            If the sprite was not selected, it si selected
+        """
         if not self.selected_sprite is None:
             print("Sprite {0} deselected".format(self.selected_sprite))
             self.selected_sprite = None
@@ -263,6 +268,13 @@ class SceneCreator:
             if not self.selected_sprite is None:                 
                 self.delta_selected = self.scene.distToObject(self.selected_sprite, pos)
                 print("Sprite {0} selected".format(self.selected_sprite))
+                
+    def deleteAtPosition(self, pos):
+        """ Selects and delete the sprite at the given position """            
+        self.selected_sprite = self.scene.objectAt(pos) 
+        if not self.selected_sprite is None:
+            self.scene.deleteObject(self.selected_sprite)
+            self.selected_sprite = None
                     
 if __name__ == "__main__":
     import sys

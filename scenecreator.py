@@ -56,7 +56,10 @@ class Scene:
 
     def getImage(self, sprite_name):
         import os
-        image =  pygame.image.load(os.path.join(self.sprites_dir, sprite_name)).convert_alpha()
+        image = None
+        for dirpath, dirnames, filenames in os.walk(self.sprites_dir):
+            if sprite_name in filenames:
+                image =  pygame.image.load(os.path.join(dirpath, sprite_name)).convert_alpha()
         if self.scale > 1:
             image = pygame.transform.scale(image, (self.scale * image.get_width(), self.scale * image.get_height()))
         return image
@@ -64,7 +67,10 @@ class Scene:
     def listAllImages(self):
         import os
         import glob
-        return map(os.path.basename, glob.glob(os.path.join(self.sprites_dir, "*.[pP][nN][gG]")))
+        imgs = []
+        for dirpath, dirnames, filenames in os.walk(self.sprites_dir):
+            imgs.extend(map(os.path.basename, glob.glob(os.path.join(dirpath, "*.[pP][nN][gG]"))))
+        return imgs
         
     def objectAt(self, pos):
         from pygame import Rect

@@ -64,8 +64,8 @@ class Scene:
         from pygame import Rect
         for (rn, (s, p)) in enumerate(self.objects[::-1]):
             img = self.getImage(s)
-            if Rect(p, img.get_size()).collidepoint(pos):
-                n = len(self.objects) - 1 - rn
+            n = len(self.objects) - 1 - rn
+            if Rect(p, img.get_size()).collidepoint(pos) and img.get_at(self.distToObject(n, pos)).a > 0:
                 print("Found sprite {0}: {1}".format(n, self.objects[n][0]))
                 return n
         return None

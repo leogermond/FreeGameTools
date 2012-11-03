@@ -44,8 +44,12 @@ class Scene:
             self.scene = {}
         else:
             self.scene_file = scene_file
-            f = open(self.scene_file, "r")
-            self.scene = json.load(f)
+            try:
+                with open(self.scene_file, "r") as f:
+                    self.scene = json.load(f)
+            except IOError:
+                self.scene = {}
+                
             print("{0} scene loaded with {1} objects".format(self.resolution, len(self.objects)))
         
     def displayOn(self, surface):
@@ -123,7 +127,7 @@ class Scene:
         ob[0] = imgs[(cur_img - 1)%len(imgs)]
     
     def addNewObject(self, pos):
-        self.objects.append([next(self.listAllImages()), pos])
+        self.objects.append([self.listAllImages()[0], pos])
         return len(self.objects) - 1                
         
     def saveToFile(self):
@@ -135,8 +139,9 @@ class Scene:
     
     def __getattr__(self, name):
         if name in Scene.file_data.keys():
-            default = Scene.file_data[name]
-            return self.scene.get(name, default)
+            if not name in self.scene.keys():
+                self.scene[name] = Scene.file_data[name]
+            return self.scene[name]
         else:
             return self.__dict__[name]
         

@@ -43,8 +43,9 @@ class Scene:
         if scene_file == None:
             self.scene = {}
         else:
-            self.f = open(scene_file, "r")
-            self.scene = json.load(self.f)
+            self.scene_file = scene_file
+            f = open(self.scene_file, "r")
+            self.scene = json.load(f)
             print("{0} scene loaded with {1} objects".format(self.resolution, len(self.objects)))
         
     def displayOn(self, surface):
@@ -113,7 +114,12 @@ class Scene:
         ob = self.objects[n]
         imgs = list(self.listAllImages())
         cur_img = imgs.index(ob[0])
-        ob[0] = imgs[(cur_img - 1)%len(imgs)] 
+        ob[0] = imgs[(cur_img - 1)%len(imgs)]
+    
+    def saveToFile(self):
+        import json
+        f = open(self.scene_file, "w")
+        json.dump(self.scene, f) 
     
     def __getattr__(self, name):
         if name in Scene.file_data.keys():
@@ -187,6 +193,9 @@ class SceneCreator:
                 elif event.key == K_o:
                     if not self.selected_sprite is None:
                         self.scene.changeToPreviousImage(self.selected_sprite)
+                elif event.key == K_s:
+                    if pygame.key.get_mods() & pygame.KMOD_CTRL:
+                        self.scene.saveToFile()
                 elif event.key == K_RIGHT:
                     pos = pygame.mouse.get_pos()
                     move = self.scene.scale

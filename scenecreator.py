@@ -133,6 +133,10 @@ class Scene:
     def addNewObject(self, pos):
         self.objects.append([self.listAllImages()[0], pos])
         return len(self.objects) - 1                
+    
+    def getObjectRect(self, n):
+        ob, pos = self.objects[n]
+        return Rect(pos, self.getImage(ob).get_size())
         
     def saveToFile(self):
         import json
@@ -172,6 +176,10 @@ class SceneCreator:
     
     def refresh(self):
         self.scene.displayOn(self.screen)
+        if not self.selected_sprite is None:
+            pygame.draw.rect(self.screen, pygame.Color("Red"), 
+                self.scene.getObjectRect(self.selected_sprite), 1)
+                
         pygame.display.flip()
         self.clock_fps.tick(60)
         pygame.display.set_caption("SceneCreator v{0}   {1} FPS".format(
@@ -252,7 +260,7 @@ class SceneCreator:
         if not self.selected_sprite is None:
             new_pos_x = pygame.mouse.get_pos()[0] - self.delta_selected[0]
             new_pos_y = pygame.mouse.get_pos()[1] - self.delta_selected[1]
-            self.scene.moveObject(self.selected_sprite, (new_pos_x, new_pos_y))
+            self.scene.moveObject(self.selected_sprite, (new_pos_x, new_pos_y))            
             
     def selectAtPosition(self, pos):
         """ 

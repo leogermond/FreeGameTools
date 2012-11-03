@@ -139,9 +139,7 @@ class Scene:
     
     def __getattr__(self, name):
         if name in Scene.file_data.keys():
-            if not name in self.scene.keys():
-                self.scene[name] = Scene.file_data[name]
-            return self.scene[name]
+            return self.scene.setdefault(name, Scene.file_data[name])
         else:
             return self.__dict__[name]
         

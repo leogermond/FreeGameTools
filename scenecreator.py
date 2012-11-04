@@ -169,6 +169,8 @@ class SceneCreator:
         self.selected_sprite = None
         self.delta_selected = [0, 0]
         
+        self.status_bar_font = pygame.font.SysFont("arial", 12)
+        
         self.quit = False
         while not self.quit:
             self.events()
@@ -179,12 +181,28 @@ class SceneCreator:
         if not self.selected_sprite is None:
             pygame.draw.rect(self.screen, pygame.Color("Red"), 
                 self.scene.getObjectRect(self.selected_sprite), 1)
+        self.refreshStatusBar()
                 
         pygame.display.flip()
         self.clock_fps.tick(60)
-        pygame.display.set_caption("SceneCreator v{0}   {1} FPS".format(
+        pygame.display.set_caption("SceneCreator v{0}".format(
             __version__, self.clock_fps.get_fps()))
 
+    def refreshStatusBar(self):
+        BAR_HEIGHT = 20
+        self.status_bar = pygame.Surface((self.screen.get_width(), BAR_HEIGHT))
+        self.status_bar.fill(Color("lightgray"))
+        status_bar_text = self.status_bar_font.render(
+        "{}    {}x{}    {}, {}    {:.4} FPS".format(
+            self.scene.scene_file, 
+            self.screen.get_width(), self.screen.get_height(),
+            pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1],
+            self.clock_fps.get_fps()),
+            True, # With antialiasing
+            Color("black"))
+        self.status_bar.blit(status_bar_text, (5, 2))
+        self.screen.blit(self.status_bar, (0, self.screen.get_height() - BAR_HEIGHT))
+        
     def events(self):
         for event in pygame.event.get():
             if event.type == QUIT:

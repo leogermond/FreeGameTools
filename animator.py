@@ -146,21 +146,25 @@ class Animator:
     
     def reload_files(self):
         """ Lit le dossier et recharge les images qui ont changé """
+        import os
+        import time
         from glob import glob # On importe la fonction 'glob' depuis le module 'glob'
         self.images = [] # On vide les images
         for filename in glob("{0}/*.[pP][nN][gG]".format(self.images_path)):
-            # Pour chaque image trouvée dans le dossier 
-            try: # Utilisé pour gérer les erreurs (appellées "exceptions")
-                image = pygame.image.load(filename).convert() # On la charge depuis le disque
-                if self.scale > 1: # On redimensionne l'image
-                    # On redimensionne en gardant les proportions de l'image
-                    width = image.get_width() * self.scale
-                    height = image.get_height() * self.scale
-                    image = pygame.transform.scale(image, (width, height))
-                    
-                self.images.append(image) # On l'ajoute à la liste des images
-            except: # Au cas ou une erreur à eu lieue depuis le try, on se retrouve la
-                pass # On ignore l'erreur (par exemple: image illisible ...)
+            # Pour chaque image trouvée dans le dossier
+            # On relit l'image si elle a été modifiée dans la seconde
+            if not filename in self.images or time.time() - os.getmtime(filename):
+                try: # Utilisé pour gérer les erreurs (appellées "exceptions")
+                    image = pygame.image.load(filename).convert() # On la charge depuis le disque
+                    if self.scale > 1: # On redimensionne l'image
+                        # On redimensionne en gardant les proportions de l'image
+                        width = image.get_width() * self.scale
+                        height = image.get_height() * self.scale
+                        image = pygame.transform.scale(image, (width, height))
+                        
+                    self.images.append(image) # On l'ajoute à la liste des images
+                except: # Au cas ou une erreur à eu lieue depuis le try, on se retrouve la
+                    pass # On ignore l'erreur (par exemple: image illisible ...)
                 
 def getImagesPath():
     """ Détermine le chemin demandé par l'utilisateur """

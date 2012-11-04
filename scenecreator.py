@@ -216,69 +216,71 @@ class SceneCreator:
                 elif event.button == 3:
                     self.deleteAtPosition(event.pos)
             elif event.type == KEYDOWN:
-                if event.key == K_c:
-                    if not self.selected_sprite is None:
-                        self.selected_sprite = self.scene.copyObject(self.selected_sprite)
-                elif event.key == K_f:
-                    if not self.selected_sprite is None:
-                        self.selected_sprite = self.scene.putToForeground(self.selected_sprite)
-                elif event.key == K_b:
-                    if not self.selected_sprite is None:
-                        self.selected_sprite = self.scene.putToBackground(self.selected_sprite)
-                elif event.key == K_p:
-                    if not self.selected_sprite is None:
-                        self.scene.changeToNextImage(self.selected_sprite)
-                elif event.key == K_o:
-                    if not self.selected_sprite is None:
-                        self.scene.changeToPreviousImage(self.selected_sprite)
-                elif event.key == K_s:
-                    if pygame.key.get_mods() & pygame.KMOD_CTRL:
-                        self.scene.saveToFile()
-                elif event.key == K_RETURN:
-                    self.selectAtPosition(pygame.mouse.get_pos())
-                elif event.key == K_DELETE:
-                    self.deleteAtPosition(pygame.mouse.get_pos())
-                elif event.key == K_SPACE:
-                    self.selected_sprite = self.scene.addNewObject(pygame.mouse.get_pos())
-                    self.delta_selected = [0, 0]
-                elif event.key == K_PAGEDOWN:
-                    if self.scene.scale > 1:
-                        self.scene.scale -= 1
-                elif event.key == K_PAGEUP:
-                    self.scene.scale += 1
-                elif event.key == K_RIGHT:
-                    pos = pygame.mouse.get_pos()
-                    move = self.scene.scale
-                    if pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                         move *= 10
-                    pygame.mouse.set_pos((pos[0] + move, pos[1]))
-                elif event.key == K_LEFT:
-                    pos = pygame.mouse.get_pos()
-                    move = self.scene.scale
-                    if pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                         move *= 10
-                    pygame.mouse.set_pos((pos[0] - move, pos[1]))
-                elif event.key == K_UP:
-                    pos = pygame.mouse.get_pos()
-                    move = self.scene.scale
-                    if pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                         move *= 10
-                    pygame.mouse.set_pos((pos[0], pos[1] - move))
-                elif event.key == K_DOWN:
-                    pos = pygame.mouse.get_pos()
-                    move = self.scene.scale
-                    if pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                         move *= 10
-                    pygame.mouse.set_pos((pos[0], pos[1] + move))
-                elif event.key == K_F4:
-                    if pygame.key.get_mods() & KMOD_ALT:
-                        self.quit = True
-                        break
+                self.keyDownEvent(event.unicode, event.key, event.mod)
         
         if not self.selected_sprite is None:
             new_pos_x = pygame.mouse.get_pos()[0] - self.delta_selected[0]
             new_pos_y = pygame.mouse.get_pos()[1] - self.delta_selected[1]
             self.scene.moveObject(self.selected_sprite, (new_pos_x, new_pos_y))            
+    
+    def keyDownEvent(self, unicode, key, mods):
+        if key == K_c:
+            if not self.selected_sprite is None:
+                self.selected_sprite = self.scene.copyObject(self.selected_sprite)
+        elif key == K_f:
+            if not self.selected_sprite is None:
+                self.selected_sprite = self.scene.putToForeground(self.selected_sprite)
+        elif key == K_b:
+            if not self.selected_sprite is None:
+                self.selected_sprite = self.scene.putToBackground(self.selected_sprite)
+        elif key == K_p:
+            if not self.selected_sprite is None:
+                self.scene.changeToNextImage(self.selected_sprite)
+        elif key == K_o:
+            if not self.selected_sprite is None:
+                self.scene.changeToPreviousImage(self.selected_sprite)
+        elif key == K_s:
+            if pygame.key.get_mods() & pygame.KMOD_CTRL:
+                self.scene.saveToFile()
+        elif key == K_RETURN:
+            self.selectAtPosition(pygame.mouse.get_pos())
+        elif key == K_DELETE:
+            self.deleteAtPosition(pygame.mouse.get_pos())
+        elif key == K_SPACE:
+            self.selected_sprite = self.scene.addNewObject(pygame.mouse.get_pos())
+            self.delta_selected = [0, 0]
+        elif key == K_PAGEDOWN:
+            if self.scene.scale > 1:
+                self.scene.scale -= 1
+        elif key == K_PAGEUP:
+            self.scene.scale += 1
+        elif key == K_RIGHT:
+            pos = pygame.mouse.get_pos()
+            move = self.scene.scale
+            if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                 move *= 10
+            pygame.mouse.set_pos((pos[0] + move, pos[1]))
+        elif key == K_LEFT:
+            pos = pygame.mouse.get_pos()
+            move = self.scene.scale
+            if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                 move *= 10
+            pygame.mouse.set_pos((pos[0] - move, pos[1]))
+        elif key == K_UP:
+            pos = pygame.mouse.get_pos()
+            move = self.scene.scale
+            if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                 move *= 10
+            pygame.mouse.set_pos((pos[0], pos[1] - move))
+        elif key == K_DOWN:
+            pos = pygame.mouse.get_pos()
+            move = self.scene.scale
+            if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                 move *= 10
+            pygame.mouse.set_pos((pos[0], pos[1] + move))
+        elif key == K_F4:
+            if pygame.key.get_mods() & KMOD_ALT:
+                self.quit = True
             
     def selectAtPosition(self, pos):
         """ 

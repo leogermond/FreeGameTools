@@ -57,8 +57,9 @@ class Animator:
         self.images_path = images_path
         # Police de caractères pour la barre de statut 
         self.status_bar_font = pygame.font.SysFont("arial", 12)
-        # Créée la zone d'affichage et la conserve en mémoire pour dessiner dessus plus tard
-        self.screen = pygame.display.set_mode(resolution)
+        # Créée la zone d'affichage redimensionnable 
+        # et la conserve en mémoire pour dessiner dessus plus tard
+        self.screen = pygame.display.set_mode(resolution, pygame.RESIZABLE)
         # On affiche les paramètres du programme
         self.displayParameters()
 
@@ -70,6 +71,9 @@ class Animator:
                 if event.type == QUIT: # L'évènement est de quitter
                     self.quit = True
                     break # On ne traite pas d'évènements supplémentaires
+                elif event.type == VIDEORESIZE: # Redimensionnement de la fenetre
+                    # On met la fenetre à la nouvelle taille
+                    pygame.display.set_mode(event.size, pygame.RESIZABLE)
                 elif event.type == KEYDOWN: # L'évènement est "touche appuyée"
                     # Suivant la touche appuyée, on fait un traitement différent
                     if event.key == K_q: # A pressé (QWERTY)

@@ -30,7 +30,7 @@ from pygame import Color
 """
 
 # La version du logicel
-__version__ = "0.1"
+__version__ = "0.2"
 
 # La résolution du programme
 RESOLUTION = (400,300)
@@ -55,6 +55,8 @@ class Animator:
         self.images = []
         # Dossier ou sont stockées les images
         self.images_path = images_path
+        # Police de caractères pour la barre de statut 
+        self.status_bar_font = pygame.font.SysFont("arial", 12)
         # Créée la zone d'affichage et la conserve en mémoire pour dessiner dessus plus tard
         self.screen = pygame.display.set_mode(resolution)
         # On affiche les paramètres du programme
@@ -96,8 +98,7 @@ class Animator:
     
     def displayParameters(self):
         """ Affiche les paramètres du programme en haut de la fenetre """
-        pygame.display.set_caption("Animator v{0}: {1}    Speed {2}    {3} FPS".format(
-            __version__, self.images_path, self.speed, self.clock_fps.get_fps()))
+        pygame.display.set_caption("Animator v{0}".format(__version__))
     
     def refresh(self):
         """ Rafraichit l'affichage = Redessine l'image """
@@ -113,10 +114,31 @@ class Animator:
         else: # Il n'y a aucune image a afficher :(
             self.screen.fill(Color("gray")) # On remplit l'écran de gris
         
+        self.refreshStatusBar()
+        
         pygame.display.flip() # Obligatoire pour prendre en compte les changements d'affichage
-            
+        
         self.clock_fps.tick(FPS) # Attend quelques temps pour être sur de ne pas afficher plus vite que 60 FPS
         self.displayParameters() # On affiche les parametres
+    
+    def refreshStatusBar(self):
+        """ Rafraichit la barre de statut """
+        # Hauteur de la barre
+        BAR_HEIGHT = 20
+        # On créée la barre vide
+        self.status_bar = pygame.Surface((self.screen.get_width(), BAR_HEIGHT))
+        # Remplit la barre de gris
+        self.status_bar.fill(Color("lightgray"))
+        # Affiche le texte de la barre dans une zone tampon
+        status_bar_text = self.status_bar_font.render(
+        "{}    Speed {}    {:.4} FPS".format(
+            self.images_path, self.speed, self.clock_fps.get_fps()),
+            True, # With antialiasing
+            Color("black"))
+        # Recopie le texte dans la barre de statut
+        self.status_bar.blit(status_bar_text, (5, 2))
+        # Recopie la barre sur l'écran
+        self.screen.blit(self.status_bar, (0, self.screen.get_height() - BAR_HEIGHT))
     
     def reload_files(self):
         """ Lit le dossier et recharge les images qui ont changé """
